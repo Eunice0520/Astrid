@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小狐狸的專屬頁面</title>
+    <title>小狐狸的專屬網站</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,10 +18,27 @@
             padding: 20px;
             display: grid;
             grid-template-columns: 2fr 1fr;
-            grid-template-rows: auto auto auto;
+            grid-template-rows: auto auto;
             gap: 10px;
         }
-        .box {
+        .top-box {
+            width: 100%;
+            background: #ff6b81;
+            color: white;
+            padding: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 10px;
+        }
+        .big-box {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            text-align: left;
+        }
+        .side-box {
             background: white;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -29,12 +46,12 @@
             text-align: left;
         }
         .calendar-container {
-            max-width: 400px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            gap: 5px;
+            margin-top: 10px;
+            text-align: center;
         }
         .calendar-header {
             display: flex;
@@ -43,13 +60,6 @@
             font-size: 20px;
             font-weight: bold;
             color: #ff6b81;
-        }
-        .calendar {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            grid-template-rows: repeat(6, 1fr);
-            gap: 5px;
-            margin-top: 10px;
         }
         .day {
             padding: 15px;
@@ -72,10 +82,15 @@
             background: #ffd700;
             font-weight: bold;
         }
-        .weekday {
+        .distance-box {
+            width: 100%;
+            background: #ffd700;
+            color: black;
+            padding: 10px;
+            font-size: 20px;
             font-weight: bold;
-            color: #ff6b81;
             text-align: center;
+            border-radius: 10px;
         }
         button {
             background-color: #ff6b81;
@@ -123,63 +138,67 @@
 </head>
 <body>
 
-    <h1>🦊 小狐狸的專屬頁面 🦊</h1>
+    <div class="top-box">TOP - 小狐狸的專屬網站</div>
 
     <div class="container">
-        <div class="box">
-            <h2>📌 每日待辦填寫區</h2>
-            <textarea id="dailyTask" placeholder="寫下今天要做的事..."></textarea>
-            <button onclick="saveDailyTask()">儲存</button>
-            <p id="dailyDisplay"></p>
-        </div>
+        <div class="big-box">
+            <h2>📅 心情日曆</h2>
+            <textarea id="moodInput" placeholder="寫下今天的心情..."></textarea>
+            <button onclick="saveMood()">儲存心情</button>
+            <p id="moodDisplay"></p>
 
-        <div class="box">
-            <h2>📅 便簽填寫區</h2>
-            <textarea id="noteInput" placeholder="寫點隨手記錄..."></textarea>
-            <button onclick="saveNote()">儲存便簽</button>
-        </div>
-
-        <div class="calendar-container">
-            <div class="calendar-header">
-                <button onclick="prevMonth()">◀</button>
-                <span id="monthYear"></span>
-                <button onclick="nextMonth()">▶</button>
-            </div>
-            <div class="calendar">
-                <div class="weekday">日</div>
-                <div class="weekday">一</div>
-                <div class="weekday">二</div>
-                <div class="weekday">三</div>
-                <div class="weekday">四</div>
-                <div class="weekday">五</div>
-                <div class="weekday">六</div>
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <button onclick="prevMonth()">◀</button>
+                    <span id="monthYear"></span>
+                    <button onclick="nextMonth()">▶</button>
+                </div>
                 <div id="calendarDays"></div>
             </div>
+        </div>
+
+        <div class="side-box">
+            <h2>📜 便簽區</h2>
+            <textarea id="noteInput" placeholder="寫點隨手記錄..."></textarea>
+            <button onclick="saveNote()">儲存</button>
+            <p id="noteDisplay"></p>
+
+            <h2>🎂 生日倒數</h2>
             <p id="countdownMessage"></p>
         </div>
     </div>
 
+    <div class="distance-box">🎂 距生日還有 <span id="distanceDays"></span> 天</div>
+
     <div class="barrage-container" id="barrageContainer"></div>
 
     <script>
+        function saveMood() {
+            let mood = document.getElementById("moodInput").value;
+            document.getElementById("moodDisplay").innerText = mood ? `📅 今天的心情：${mood}` : "";
+        }
+
+        function saveNote() {
+            let note = document.getElementById("noteInput").value;
+            document.getElementById("noteDisplay").innerText = note ? `📜 便簽：${note}` : "";
+        }
+
         let currentMonth = new Date().getMonth();
         let currentYear = new Date().getFullYear();
         const birthday = { month: 4, day: 20 };
 
-        function generateCalendar(month, year) {
+        function generateCalendar() {
             const calendarDays = document.getElementById("calendarDays");
             const monthYear = document.getElementById("monthYear");
             calendarDays.innerHTML = "";
 
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const today = new Date();
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
-            monthYear.innerText = `${year}年 ${month + 1}月`;
+            monthYear.innerText = `${currentYear}年 ${currentMonth + 1}月`;
 
             for (let i = 0; i < firstDay; i++) {
-                let emptyCell = document.createElement("div");
-                calendarDays.appendChild(emptyCell);
+                calendarDays.appendChild(document.createElement("div"));
             }
 
             for (let day = 1; day <= daysInMonth; day++) {
@@ -187,36 +206,25 @@
                 dayElement.classList.add("day");
                 dayElement.innerText = day;
 
-                if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
-                    dayElement.classList.add("today");
-                }
-
-                if (month === birthday.month && day === birthday.day) {
+                if (currentMonth === birthday.month && day === birthday.day) {
                     dayElement.classList.add("birthday");
                 }
 
                 calendarDays.appendChild(dayElement);
             }
-
-            updateCountdown();
         }
 
         function updateCountdown() {
             let today = new Date();
             let birthdayDate = new Date(today.getFullYear(), birthday.month, birthday.day);
-            if (today > birthdayDate) {
-                birthdayDate.setFullYear(today.getFullYear() + 1);
-            }
             let diff = Math.ceil((birthdayDate - today) / (1000 * 60 * 60 * 24));
-            document.getElementById("countdownMessage").innerText = diff > 0 
-                ? `🎂 距離生日還有 ${diff} 天！` 
-                : "🎉 今天是你的生日！快來收禮物！";
+            document.getElementById("distanceDays").innerText = diff;
         }
 
-        function prevMonth() { currentMonth--; generateCalendar(currentMonth, currentYear); }
-        function nextMonth() { currentMonth++; generateCalendar(currentMonth, currentYear); }
-
-        document.addEventListener("DOMContentLoaded", function() { generateCalendar(currentMonth, currentYear); });
+        document.addEventListener("DOMContentLoaded", function() {
+            generateCalendar();
+            updateCountdown();
+        });
     </script>
 
 </body>
