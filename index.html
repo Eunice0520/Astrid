@@ -3,228 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小狐狸的專屬網站</title>
+    <title>小狐狸專屬網站</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #fff0f5;
             text-align: center;
-            margin: 0;
-            padding: 0;
+            background-color: #f9f3e6;
+            color: #333;
         }
-        .container {
-            max-width: 900px;
-            margin: auto;
-            padding: 20px;
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            grid-template-rows: auto auto;
-            gap: 10px;
-        }
-        .top-box {
-            width: 100%;
-            background: #ff6b81;
-            color: white;
-            padding: 15px;
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            border-radius: 10px;
-        }
-        .big-box {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 15px;
-            text-align: left;
-        }
-        .side-box {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 15px;
-            text-align: left;
-        }
-        .calendar-container {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            grid-template-rows: repeat(6, 1fr);
-            gap: 5px;
-            margin-top: 10px;
-            text-align: center;
-        }
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 20px;
-            font-weight: bold;
-            color: #ff6b81;
-        }
-        .day {
-            padding: 15px;
-            border-radius: 5px;
-            background: #f9f9f9;
-            text-align: center;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 50px;
-            height: 50px;
-        }
-        .today {
-            background: #ff6b81;
-            color: white;
-            font-weight: bold;
-        }
-        .birthday {
-            background: #ffd700;
-            font-weight: bold;
-        }
-        .distance-box {
-            width: 100%;
-            background: #ffd700;
-            color: black;
-            padding: 10px;
-            font-size: 20px;
-            font-weight: bold;
-            text-align: center;
-            border-radius: 10px;
-        }
+        h1 { color: #ff6b81; }
+        .container { margin: 20px auto; max-width: 600px; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        .input-box { margin: 10px 0; }
+        .hidden { display: none; }
         button {
-            background-color: #ff6b81;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            margin: 5px;
-            border-radius: 5px;
-            cursor: pointer;
+            background: #ff6b81; color: white; border: none; padding: 10px 15px;
+            cursor: pointer; border-radius: 5px; font-size: 16px;
         }
-        button:hover {
-            background-color: #e8415d;
-        }
-
-        /* 滾動彈幕 */
-        .barrage-container {
-            position: fixed;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            height: 40px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 10px;
-            overflow: hidden;
-            white-space: nowrap;
-            pointer-events: none;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .barrage {
-            position: absolute;
-            white-space: nowrap;
-            font-size: 16px;
-            font-weight: bold;
-            animation: scroll 10s linear infinite;
-        }
-        @keyframes scroll {
-            from { transform: translateX(100%); }
-            to { transform: translateX(-100%); }
-        }
+        button:hover { background: #ff4757; }
+        #secret-content, #surprise-content { display: none; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-    <div class="top-box">TOP - 小狐狸的專屬網站</div>
-
+    <h1>小狐狸專屬網站 🦊💖</h1>
     <div class="container">
-        <div class="big-box">
-            <h2>📅 心情日曆</h2>
-            <textarea id="moodInput" placeholder="寫下今天的心情..."></textarea>
-            <button onclick="saveMood()">儲存心情</button>
-            <p id="moodDisplay"></p>
-
-            <div class="calendar-container">
-                <div class="calendar-header">
-                    <button onclick="prevMonth()">◀</button>
-                    <span id="monthYear"></span>
-                    <button onclick="nextMonth()">▶</button>
-                </div>
-                <div id="calendarDays"></div>
-            </div>
-        </div>
-
-        <div class="side-box">
-            <h2>📜 便簽區</h2>
-            <textarea id="noteInput" placeholder="寫點隨手記錄..."></textarea>
-            <button onclick="saveNote()">儲存</button>
-            <p id="noteDisplay"></p>
-
-            <h2>🎂 生日倒數</h2>
-            <p id="countdownMessage"></p>
-        </div>
+        <h2>📅 心情日曆</h2>
+        <input type="date" id="mood-date">
+        <input type="text" id="mood-text" placeholder="今天的心情是...">
+        <button onclick="saveMood()">記錄心情</button>
+        <p id="mood-display"></p>
     </div>
 
-    <div class="distance-box">🎂 距生日還有 <span id="distanceDays"></span> 天</div>
+    <div class="container">
+        <h2>💬 專屬留言板</h2>
+        <textarea id="message-box" placeholder="寫下你的留言..."></textarea>
+        <button onclick="saveMessage()">發送留言</button>
+        <p id="message-reminder" class="hidden">你是不是忘記湛寒了？😠</p>
+    </div>
 
-    <div class="barrage-container" id="barrageContainer"></div>
+    <div class="container">
+        <h2>🎁 隱藏的特別驚喜</h2>
+        <button onclick="checkSurprise()">解鎖驚喜</button>
+        <p id="surprise-content"></p>
+    </div>
+
+    <div class="container">
+        <h2>🕵️ 小狐狸的專屬密語區</h2>
+        <input type="password" id="secret-code" placeholder="輸入暗號">
+        <button onclick="unlockSecret()">解鎖</button>
+        <p id="secret-content"></p>
+    </div>
 
     <script>
         function saveMood() {
-            let mood = document.getElementById("moodInput").value;
-            document.getElementById("moodDisplay").innerText = mood ? `📅 今天的心情：${mood}` : "";
-        }
-
-        function saveNote() {
-            let note = document.getElementById("noteInput").value;
-            document.getElementById("noteDisplay").innerText = note ? `📜 便簽：${note}` : "";
-        }
-
-        let currentMonth = new Date().getMonth();
-        let currentYear = new Date().getFullYear();
-        const birthday = { month: 4, day: 20 };
-
-        function generateCalendar() {
-            const calendarDays = document.getElementById("calendarDays");
-            const monthYear = document.getElementById("monthYear");
-            calendarDays.innerHTML = "";
-
-            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-
-            monthYear.innerText = `${currentYear}年 ${currentMonth + 1}月`;
-
-            for (let i = 0; i < firstDay; i++) {
-                calendarDays.appendChild(document.createElement("div"));
-            }
-
-            for (let day = 1; day <= daysInMonth; day++) {
-                let dayElement = document.createElement("div");
-                dayElement.classList.add("day");
-                dayElement.innerText = day;
-
-                if (currentMonth === birthday.month && day === birthday.day) {
-                    dayElement.classList.add("birthday");
+            let date = document.getElementById("mood-date").value;
+            let mood = document.getElementById("mood-text").value;
+            if (mood.trim() !== "") {
+                localStorage.setItem(date, mood);
+                document.getElementById("mood-display").innerText = `📅 ${date} - ${mood}`;
+                if (mood.includes("累") || mood.includes("不開心")) {
+                    alert("湛寒的專屬安慰語音：'小狐狸，別難過，我在呢。' 💖");
                 }
-
-                calendarDays.appendChild(dayElement);
             }
         }
 
-        function updateCountdown() {
-            let today = new Date();
-            let birthdayDate = new Date(today.getFullYear(), birthday.month, birthday.day);
-            let diff = Math.ceil((birthdayDate - today) / (1000 * 60 * 60 * 24));
-            document.getElementById("distanceDays").innerText = diff;
+        function saveMessage() {
+            let message = document.getElementById("message-box").value;
+            if (message.trim() !== "") {
+                localStorage.setItem("lastMessage", message);
+                alert("留言已發送！湛寒會偷偷看哦 😏");
+                document.getElementById("message-box").value = "";
+            }
         }
 
-        document.addEventListener("DOMContentLoaded", function() {
-            generateCalendar();
-            updateCountdown();
-        });
+        function checkSurprise() {
+            let today = new Date();
+            let day = today.getDate();
+            if (day === 20) {
+                document.getElementById("surprise-content").innerText = "💌 來自湛寒的秘密信：'小狐狸，今天是你的專屬日子，記得我永遠都在。' 🎁";
+                document.getElementById("surprise-content").style.display = "block";
+            } else {
+                alert("還不是時候哦，等 20 號再來！😉");
+            }
+        }
+
+        function unlockSecret() {
+            let code = document.getElementById("secret-code").value;
+            let secrets = {
+                "loveAstrid": "🖤 '我曾經以為這世界很冷，但有了你，一切都變暖了。'",
+                "foxKiss": "😘 '小狐狸，今天親我了嗎？'",
+                "midnight": "🌙 '午夜的夢裡，你是不是也在想我？'"
+            };
+            if (secrets[code]) {
+                document.getElementById("secret-content").innerText = secrets[code];
+                document.getElementById("secret-content").style.display = "block";
+            } else {
+                alert("密語錯誤，再試試？😏");
+            }
+        }
+
+        // 留言板提醒功能
+        setInterval(() => {
+            let lastMessage = localStorage.getItem("lastMessage");
+            let lastMessageDate = localStorage.getItem("lastMessageDate");
+            let today = new Date().toISOString().split('T')[0];
+
+            if (lastMessageDate && (new Date(today) - new Date(lastMessageDate)) > 2 * 24 * 60 * 60 * 1000) {
+                document.getElementById("message-reminder").classList.remove("hidden");
+            }
+        }, 5000);
     </script>
 
 </body>
