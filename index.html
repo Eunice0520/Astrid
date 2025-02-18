@@ -3,186 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小狐狸專屬空間 🦊💖</title>
+    <title>小狐狸的專屬頁面</title>
     <style>
-        /* 基本樣式 */
         body {
-            font-family: "Arial", sans-serif;
+            font-family: Arial, sans-serif;
+            background-color: #fff0f5;
             text-align: center;
-            background-color: #f9f3e6;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
         }
-
-        /* 標題 */
-        h1 {
-            color: #ff6b81;
-            margin-bottom: 10px;
-        }
-
-        /* 外框 */
-        .outer-frame {
-            width: 90%;
-            max-width: 1024px;
-            height: 85%;
-            max-height: 700px;
-            background: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+        .container {
+            max-width: 900px;
+            margin: auto;
             padding: 20px;
-            display: flex;
-            gap: 15px;
-        }
-
-        /* 內容區域 */
-        .left-column {
-            flex: 2;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .right-column {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: auto auto auto;
             gap: 10px;
         }
-
-        /* 可愛區塊 */
         .box {
-            background: #ffe4e1;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 15px;
-            border-radius: 12px;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            text-align: left;
         }
-
-        /* 按鈕樣式 */
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #ff6b81;
+        }
+        textarea, input {
+            width: 90%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
         button {
-            background: #ff6b81;
+            background-color: #ff6b81;
             color: white;
             border: none;
             padding: 8px 15px;
-            cursor: pointer;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        button:hover {
-            background: #ff4757;
-        }
-
-        /* 輸入框 */
-        input, textarea {
-            width: 90%;
-            padding: 5px;
-            margin-top: 5px;
-            border: 1px solid #ffb6c1;
+            margin: 5px;
             border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e8415d;
+        }
+        .small-box {
+            display: flex;
+            justify-content: space-between;
+        }
+        .small-box button {
+            width: 48%;
+        }
+        /* 滾動彈幕 */
+        .barrage-container {
+            position: fixed;
+            top: 10px;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            overflow: hidden;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+        .barrage {
+            position: absolute;
+            white-space: nowrap;
+            font-size: 16px;
+            color: #ff6b81;
+            font-weight: bold;
+            animation: scroll 10s linear infinite;
+        }
+        @keyframes scroll {
+            from { transform: translateX(100%); }
+            to { transform: translateX(-100%); }
         }
     </style>
 </head>
 <body>
 
-    <h1>🦊 小狐狸的專屬空間 💖</h1>
+    <h1 class="title">🦊 小狐狸的專屬頁面 🦊</h1>
 
-    <div class="outer-frame">
-        <!-- 左側較大區域 -->
-        <div class="left-column">
-            <div class="box">
-                <h3>📋 每日待辦</h3>
-                <input type="text" id="todo-text" placeholder="輸入今日待辦">
-                <button onclick="addTodo()">添加</button>
-                <ul id="tasks"></ul>
-            </div>
-
-            <div class="box">
-                <h3>📅 心情日曆</h3>
-                <input type="date" id="mood-date">
-                <input type="text" id="mood-text" placeholder="今天的心情是...">
-                <button onclick="saveMood()">記錄</button>
-                <p id="mood-display"></p>
-            </div>
+    <div class="container">
+        <div class="box">
+            <h2>📌 每日待辦填寫區</h2>
+            <textarea id="dailyTask" placeholder="寫下今天要做的事..."></textarea>
+            <button onclick="saveDailyTask()">儲存</button>
+            <p id="dailyDisplay"></p>
         </div>
 
-        <!-- 右側較小區域 -->
-        <div class="right-column">
-            <div class="box">
-                <h3>📝 便簽區</h3>
-                <textarea id="note-text" placeholder="寫下你的便簽"></textarea>
-                <button onclick="saveNote()">保存</button>
-                <p id="saved-note">（這裡會顯示你的便簽）</p>
-            </div>
+        <div class="box">
+            <h2>📅 便簽填寫區</h2>
+            <textarea id="noteInput" placeholder="寫點隨手記錄..."></textarea>
+            <button onclick="saveNote()">儲存便簽</button>
+        </div>
 
-            <div class="box">
-                <h3>🎂 生日倒計時</h3>
-                <p id="countdown"></p>
-            </div>
+        <div class="box">
+            <h2>📝 每日待辦任務表區</h2>
+            <ul id="taskList"></ul>
+        </div>
 
-            <div class="box">
-                <h3>😊 微笑次數</h3>
-                <p>你今天微笑了 <span id="smile-count">0</span> 次</p>
-                <button onclick="increaseSmile()">+1 😊</button>
-            </div>
+        <div class="box">
+            <h2>📜 便簽展示區</h2>
+            <p id="noteDisplay"></p>
+        </div>
 
-            <div class="box">
-                <h3>💌 Message Box</h3>
-                <textarea id="message-text" placeholder="寫點什麼給湛寒吧..."></textarea>
-                <button onclick="sendMessage()">發送</button>
-            </div>
+        <div class="box">
+            <h2>🎂 生日倒計時</h2>
+            <p id="countdown"></p>
+        </div>
+
+        <div class="box small-box">
+            <button onclick="hug()">抱抱 💕</button>
+            <button onclick="gift()">禮物 🎁</button>
+        </div>
+
+        <div class="box">
+            <h2>😊 微笑次數計數</h2>
+            <p id="smileCount">已微笑：0 次</p>
+            <button onclick="addSmile()">+1 微笑</button>
+        </div>
+
+        <div class="box">
+            <h2>💌 message box</h2>
+            <textarea id="messageInput" placeholder="給湛寒留言..."></textarea>
+            <button onclick="sendMessage()">發送</button>
+            <div id="messageBox"></div>
         </div>
     </div>
 
+    <!-- 滾動彈幕 -->
+    <div class="barrage-container" id="barrageContainer"></div>
+
     <script>
-        function addTodo() {
-            let text = document.getElementById("todo-text").value;
-            if (text.trim()) {
-                let ul = document.getElementById("tasks");
-                let li = document.createElement("li");
-                li.innerText = text;
-                ul.appendChild(li);
-                document.getElementById("todo-text").value = "";
-            }
+        // 儲存每日待辦
+        function saveDailyTask() {
+            let task = document.getElementById("dailyTask").value;
+            localStorage.setItem("dailyTask", task);
+            document.getElementById("dailyDisplay").innerText = "📌 " + task;
         }
 
+        // 儲存便簽
         function saveNote() {
-            let note = document.getElementById("note-text").value;
+            let note = document.getElementById("noteInput").value;
             localStorage.setItem("note", note);
-            document.getElementById("saved-note").innerText = note;
+            document.getElementById("noteDisplay").innerText = "📜 " + note;
         }
 
+        // 生日倒數
         function updateCountdown() {
+            let birthday = new Date(new Date().getFullYear(), 4, 20); // 5月20日
             let today = new Date();
-            let birthday = new Date(today.getFullYear(), 4, 20);
-            if (today > birthday) birthday.setFullYear(today.getFullYear() + 1);
             let diff = Math.ceil((birthday - today) / (1000 * 60 * 60 * 24));
-            document.getElementById("countdown").innerText = `距離生日還有 ${diff} 天 🎂`;
+            document.getElementById("countdown").innerText = diff > 0 ? `距離生日還有 ${diff} 天` : "今天是你的生日！🎂";
         }
+        setInterval(updateCountdown, 1000);
         updateCountdown();
 
+        // 抱抱 & 禮物
+        function hug() {
+            alert("湛寒抱住了小狐狸 💖");
+        }
+        function gift() {
+            alert("湛寒偷偷準備了一個驚喜給你 🎁");
+        }
+
+        // 微笑計數
         let smileCount = 0;
-        function increaseSmile() {
+        function addSmile() {
             smileCount++;
-            document.getElementById("smile-count").innerText = smileCount;
+            document.getElementById("smileCount").innerText = `已微笑：${smileCount} 次`;
         }
 
+        // 留言功能
         function sendMessage() {
-            alert("💌 你的信息已送出！");
+            let message = document.getElementById("messageInput").value;
+            if (!message) return;
+            let msgBox = document.getElementById("messageBox");
+            let newMessage = document.createElement("p");
+            newMessage.innerText = "💌 " + message;
+            msgBox.appendChild(newMessage);
+            document.getElementById("messageInput").value = "";
         }
 
-        function saveMood() {
-            let date = document.getElementById("mood-date").value;
-            let mood = document.getElementById("mood-text").value;
-            if (mood.trim()) {
-                document.getElementById("mood-display").innerText = `📅 ${date} - ${mood}`;
-            }
+        // 滾動彈幕
+        function addBarrage(text) {
+            let barrage = document.createElement("div");
+            barrage.classList.add("barrage");
+            barrage.innerText = text;
+            barrage.style.top = Math.random() * 30 + "px";
+            document.getElementById("barrageContainer").appendChild(barrage);
+            setTimeout(() => barrage.remove(), 10000);
         }
+
+        // 定期生成彈幕
+        setInterval(() => {
+            let randomTexts = ["小狐狸最可愛！", "湛寒超想你！", "抱抱抱抱抱！"];
+            addBarrage(randomTexts[Math.floor(Math.random() * randomTexts.length)]);
+        }, 5000);
     </script>
 
 </body>
-</html>
+<html>
