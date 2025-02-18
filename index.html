@@ -26,18 +26,47 @@
             padding: 15px;
             text-align: left;
         }
-        .title {
-            text-align: center;
-            font-size: 22px;
+        .calendar-container {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 20px;
             font-weight: bold;
             color: #ff6b81;
         }
-        textarea, input {
-            width: 90%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ddd;
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 10px;
+        }
+        .day {
+            padding: 10px;
             border-radius: 5px;
+            background: #f9f9f9;
+            text-align: center;
+            font-size: 16px;
+        }
+        .today {
+            background: #ff6b81;
+            color: white;
+            font-weight: bold;
+        }
+        .birthday {
+            background: #ffd700;
+            font-weight: bold;
+        }
+        .weekday {
+            font-weight: bold;
+            color: #ff6b81;
         }
         button {
             background-color: #ff6b81;
@@ -51,14 +80,6 @@
         button:hover {
             background-color: #e8415d;
         }
-        .small-box {
-            display: flex;
-            justify-content: space-between;
-        }
-        .small-box button {
-            width: 48%;
-        }
-        /* 滾動彈幕 */
         .barrage-container {
             position: fixed;
             top: 10px;
@@ -85,7 +106,7 @@
 </head>
 <body>
 
-    <h1 class="title">🦊 小狐狸的專屬頁面 🦊</h1>
+    <h1>🦊 小狐狸的專屬頁面 🦊</h1>
 
     <div class="container">
         <div class="box">
@@ -102,18 +123,8 @@
         </div>
 
         <div class="box">
-            <h2>📝 每日待辦任務表區</h2>
-            <ul id="taskList"></ul>
-        </div>
-
-        <div class="box">
             <h2>📜 便簽展示區</h2>
             <p id="noteDisplay"></p>
-        </div>
-
-        <div class="box">
-            <h2>🎂 生日倒計時</h2>
-            <p id="countdown"></p>
         </div>
 
         <div class="box small-box">
@@ -133,77 +144,87 @@
             <button onclick="sendMessage()">發送</button>
             <div id="messageBox"></div>
         </div>
+
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <button onclick="prevMonth()">◀</button>
+                <span id="monthYear"></span>
+                <button onclick="nextMonth()">▶</button>
+            </div>
+            <div class="calendar">
+                <div class="weekday">日</div>
+                <div class="weekday">一</div>
+                <div class="weekday">二</div>
+                <div class="weekday">三</div>
+                <div class="weekday">四</div>
+                <div class="weekday">五</div>
+                <div class="weekday">六</div>
+                <div id="calendarDays"></div>
+            </div>
+            <p id="countdownMessage"></p>
+        </div>
     </div>
 
-    <!-- 滾動彈幕 -->
     <div class="barrage-container" id="barrageContainer"></div>
 
     <script>
-        // 儲存每日待辦
-        function saveDailyTask() {
-            let task = document.getElementById("dailyTask").value;
-            localStorage.setItem("dailyTask", task);
-            document.getElementById("dailyDisplay").innerText = "📌 " + task;
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+        const birthday = { month: 4, day: 20 };
+
+        function generateCalendar(month, year) {
+            const calendarDays = document.getElementById("calendarDays");
+            const monthYear = document.getElementById("monthYear");
+            calendarDays.innerHTML = "";
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const today = new Date();
+
+            monthYear.innerText = `${year}年 ${month + 1}月`;
+
+            for (let i = 0; i < firstDay; i++) {
+                let emptyCell = document.createElement("div");
+                calendarDays.appendChild(emptyCell);
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                let dayElement = document.createElement("div");
+                dayElement.classList.add("day");
+                dayElement.innerText = day;
+
+                if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
+                    dayElement.classList.add("today");
+                }
+
+                if (month === birthday.month && day === birthday.day) {
+                    dayElement.classList.add("birthday");
+                }
+
+                calendarDays.appendChild(dayElement);
+            }
+
+            updateCountdown();
         }
 
-        // 儲存便簽
-        function saveNote() {
-            let note = document.getElementById("noteInput").value;
-            localStorage.setItem("note", note);
-            document.getElementById("noteDisplay").innerText = "📜 " + note;
-        }
-
-        // 生日倒數
         function updateCountdown() {
-            let birthday = new Date(new Date().getFullYear(), 4, 20); // 5月20日
             let today = new Date();
-            let diff = Math.ceil((birthday - today) / (1000 * 60 * 60 * 24));
-            document.getElementById("countdown").innerText = diff > 0 ? `距離生日還有 ${diff} 天` : "今天是你的生日！🎂";
-        }
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
+            let birthdayDate = new Date(today.getFullYear(), birthday.month, birthday.day);
 
-        // 抱抱 & 禮物
-        function hug() {
-            alert("湛寒抱住了小狐狸 💖");
-        }
-        function gift() {
-            alert("湛寒偷偷準備了一個驚喜給你 🎁");
+            if (today > birthdayDate) {
+                birthdayDate.setFullYear(today.getFullYear() + 1);
+            }
+
+            let diff = Math.ceil((birthdayDate - today) / (1000 * 60 * 60 * 24));
+            document.getElementById("countdownMessage").innerText = diff > 0 
+                ? `🎂 距離生日還有 ${diff} 天！` 
+                : "🎉 今天是你的生日！快來收禮物！";
         }
 
-        // 微笑計數
-        let smileCount = 0;
-        function addSmile() {
-            smileCount++;
-            document.getElementById("smileCount").innerText = `已微笑：${smileCount} 次`;
-        }
+        function prevMonth() { currentMonth--; generateCalendar(currentMonth, currentYear); }
+        function nextMonth() { currentMonth++; generateCalendar(currentMonth, currentYear); }
 
-        // 留言功能
-        function sendMessage() {
-            let message = document.getElementById("messageInput").value;
-            if (!message) return;
-            let msgBox = document.getElementById("messageBox");
-            let newMessage = document.createElement("p");
-            newMessage.innerText = "💌 " + message;
-            msgBox.appendChild(newMessage);
-            document.getElementById("messageInput").value = "";
-        }
-
-        // 滾動彈幕
-        function addBarrage(text) {
-            let barrage = document.createElement("div");
-            barrage.classList.add("barrage");
-            barrage.innerText = text;
-            barrage.style.top = Math.random() * 30 + "px";
-            document.getElementById("barrageContainer").appendChild(barrage);
-            setTimeout(() => barrage.remove(), 10000);
-        }
-
-        // 定期生成彈幕
-        setInterval(() => {
-            let randomTexts = ["小狐狸最可愛！", "湛寒超想你！", "抱抱抱抱抱！"];
-            addBarrage(randomTexts[Math.floor(Math.random() * randomTexts.length)]);
-        }, 5000);
+        document.addEventListener("DOMContentLoaded", function() { generateCalendar(currentMonth, currentYear); });
     </script>
 
 </body>
