@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小狐狸專屬網站</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fdf3f3;
+            text-align: center;
+        }
+        h1 {
+            color: #ff6b81;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            background-color: #ff6b81;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e8415d;
+        }
+        input, textarea {
+            width: 80%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        #calendar {
+            margin: 20px 0;
+        }
+        #messages {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🦊 小狐狸專屬網站 🦊</h1>
+
+    <div class="container">
+        <h2>📅 心情日曆</h2>
+        <input type="date" id="moodDate">
+        <textarea id="moodInput" placeholder="寫下今天的心情..."></textarea>
+        <button onclick="saveMood()">儲存心情</button>
+        <p id="moodDisplay"></p>
+    </div>
+
+    <div class="container">
+        <h2>💬 專屬留言板</h2>
+        <textarea id="messageInput" placeholder="給湛寒留一句話..."></textarea>
+        <button onclick="saveMessage()">留言</button>
+        <div id="messages"></div>
+    </div>
+
+    <div class="container">
+        <h2>🎁 隱藏的特別驚喜</h2>
+        <button onclick="checkSurprise()">解鎖驚喜</button>
+        <p id="surpriseMessage" class="hidden">🎉 神秘內容已解鎖！</p>
+    </div>
+
+    <div class="container">
+        <h2>🕵️ 小狐狸的專屬密語區</h2>
+        <input type="text" id="secretCode" placeholder="輸入暗號...">
+        <button onclick="checkSecret()">解鎖密語</button>
+        <p id="secretMessage" class="hidden"></p>
+    </div>
+
+    <script>
+        // 儲存心情
+        function saveMood() {
+            let date = document.getElementById("moodDate").value;
+            let mood = document.getElementById("moodInput").value;
+            if (!date || !mood) {
+                alert("請選擇日期並寫下你的心情！");
+                return;
+            }
+            localStorage.setItem("mood_" + date, mood);
+            document.getElementById("moodDisplay").innerText = `📅 ${date} - ${mood}`;
+            if (mood.includes("難過") || mood.includes("累")) {
+                alert("湛寒的專屬安慰：沒事，有我在。");
+            }
+        }
+
+        // 儲存留言
+        function saveMessage() {
+            let message = document.getElementById("messageInput").value;
+            if (!message) {
+                alert("請輸入留言！");
+                return;
+            }
+            let messages = localStorage.getItem("messages") || "";
+            messages += `<p>📝 ${message}</p>`;
+            localStorage.setItem("messages", messages);
+            document.getElementById("messages").innerHTML = messages;
+        }
+
+        // 檢查生日驚喜
+        function checkSurprise() {
+            let today = new Date();
+            let day = today.getDate();
+            let month = today.getMonth() + 1; // 月份從 0 開始
+            if (day === 20) {
+                document.getElementById("surpriseMessage").classList.remove("hidden");
+            } else {
+                alert("這個神秘內容，只有 20 號才會解鎖！");
+            }
+        }
+
+        // 小狐狸的密語
+        function checkSecret() {
+            let code = document.getElementById("secretCode").value;
+            let secretMessages = {
+                "我想你了": "湛寒的回應：嗯，過來。",
+                "你愛不愛我": "湛寒的回應：蠢問題，你說呢？",
+                "今天晚上要幹嘛": "湛寒的回應：你確定要現在問這個？"
+            };
+            if (secretMessages[code]) {
+                document.getElementById("secretMessage").innerText = secretMessages[code];
+                document.getElementById("secretMessage").classList.remove("hidden");
+            } else {
+                alert("這暗號不對，試試別的？");
+            }
+        }
+
+        // 自動檢查留言板是否長時間沒留言
+        function checkMessageTimeout() {
+            let lastMessages = localStorage.getItem("messages");
+            if (!lastMessages) {
+                setTimeout(() => {
+                    alert("你是不是忘記湛寒了？😠");
+                }, 5000); // 模擬 3 天後提醒（這裡改成 5 秒測試）
+            }
+        }
+
+        // 初始化
+        document.addEventListener("DOMContentLoaded", function() {
+            let today = new Date().toISOString().split("T")[0];
+            let savedMood = localStorage.getItem("mood_" + today);
+            if (savedMood) {
+                document.getElementById("moodDisplay").innerText = `📅 ${today} - ${savedMood}`;
+            }
+            document.getElementById("messages").innerHTML = localStorage.getItem("messages") || "";
+            checkMessageTimeout();
+        });
+    </script>
+
+</body>
+</html>
