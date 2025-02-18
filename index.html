@@ -10,27 +10,27 @@
             text-align: center;
             background-color: #fdf2f8;
             color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         h1 { color: #ff6b81; }
         .container {
-            margin: 20px auto;
-            max-width: 800px;
-            background: #fff;
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            padding: 10px;
+            gap: 15px;
         }
         .box {
             background: #ffe4e1;
             padding: 15px;
             border-radius: 8px;
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            width: 280px;
+            min-height: 200px;
+            text-align: center;
+            flex-shrink: 0;
         }
         button {
             background: #ff6b81;
@@ -51,52 +51,47 @@
 </head>
 <body>
 
+    <h1>🦊 小狐狸的專屬空間 💖</h1>
+
     <div class="container">
-        <h1>🦊 小狐狸的專屬空間 💖</h1>
-
-        <div class="grid-container">
-            <div class="box" id="title-box">🌸 標題 🌸</div>
-
-            <div class="box">
-                <h3>📋 每日待辦</h3>
-                <input type="text" id="todo-text" placeholder="輸入今日待辦">
-                <button onclick="addTodo()">添加</button>
-                <ul id="tasks"></ul>
-            </div>
-
-            <div class="box">
-                <h3>📝 便簽區</h3>
-                <textarea id="note-text" placeholder="寫下你的便簽"></textarea>
-                <button onclick="saveNote()">保存</button>
-                <p id="saved-note">（這裡會顯示你的便簽）</p>
-            </div>
-
-            <div class="box">
-                <h3>🎂 生日倒計時</h3>
-                <p id="countdown"></p>
-            </div>
-
-            <div class="box">
-                <h3>😊 微笑次數</h3>
-                <p>你今天微笑了 <span id="smile-count">0</span> 次</p>
-                <button onclick="increaseSmile()">+1 😊</button>
-            </div>
-
-            <div class="box">
-                <h3>💌 Message Box</h3>
-                <textarea id="message-text" placeholder="寫點什麼給湛寒吧..."></textarea>
-                <button onclick="sendMessage()">發送</button>
-            </div>
+        <div class="box">
+            <h3>📋 每日待辦</h3>
+            <input type="text" id="todo-text" placeholder="輸入今日待辦">
+            <button onclick="addTodo()">添加</button>
+            <ul id="tasks"></ul>
         </div>
 
         <div class="box">
-            <h2>📅 心情日曆</h2>
+            <h3>📝 便簽區</h3>
+            <textarea id="note-text" placeholder="寫下你的便簽"></textarea>
+            <button onclick="saveNote()">保存</button>
+            <p id="saved-note">（這裡會顯示你的便簽）</p>
+        </div>
+
+        <div class="box">
+            <h3>🎂 生日倒計時</h3>
+            <p id="countdown"></p>
+        </div>
+
+        <div class="box">
+            <h3>😊 微笑次數</h3>
+            <p>你今天微笑了 <span id="smile-count">0</span> 次</p>
+            <button onclick="increaseSmile()">+1 😊</button>
+        </div>
+
+        <div class="box">
+            <h3>💌 Message Box</h3>
+            <textarea id="message-text" placeholder="寫點什麼給湛寒吧..."></textarea>
+            <button onclick="sendMessage()">發送</button>
+        </div>
+
+        <div class="box">
+            <h3>📅 心情日曆</h3>
             <input type="date" id="mood-date">
             <input type="text" id="mood-text" placeholder="今天的心情是...">
             <button onclick="saveMood()">記錄</button>
             <p id="mood-display"></p>
         </div>
-
     </div>
 
     <script>
