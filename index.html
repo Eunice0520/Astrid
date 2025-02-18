@@ -9,6 +9,8 @@
             font-family: Arial, sans-serif;
             background-color: #fff0f5;
             text-align: center;
+            margin: 0;
+            padding: 0;
         }
         .container {
             max-width: 900px;
@@ -45,15 +47,21 @@
         .calendar {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
+            grid-template-rows: repeat(6, 1fr);
             gap: 5px;
             margin-top: 10px;
         }
         .day {
-            padding: 10px;
+            padding: 15px;
             border-radius: 5px;
             background: #f9f9f9;
             text-align: center;
             font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
         }
         .today {
             background: #ff6b81;
@@ -67,6 +75,7 @@
         .weekday {
             font-weight: bold;
             color: #ff6b81;
+            text-align: center;
         }
         button {
             background-color: #ff6b81;
@@ -80,21 +89,29 @@
         button:hover {
             background-color: #e8415d;
         }
+
+        /* 滾動彈幕 */
         .barrage-container {
             position: fixed;
-            top: 10px;
-            left: 0;
-            width: 100%;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
             height: 40px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
             overflow: hidden;
             white-space: nowrap;
             pointer-events: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .barrage {
             position: absolute;
             white-space: nowrap;
             font-size: 16px;
-            color: #ff6b81;
             font-weight: bold;
             animation: scroll 10s linear infinite;
         }
@@ -120,29 +137,6 @@
             <h2>📅 便簽填寫區</h2>
             <textarea id="noteInput" placeholder="寫點隨手記錄..."></textarea>
             <button onclick="saveNote()">儲存便簽</button>
-        </div>
-
-        <div class="box">
-            <h2>📜 便簽展示區</h2>
-            <p id="noteDisplay"></p>
-        </div>
-
-        <div class="box small-box">
-            <button onclick="hug()">抱抱 💕</button>
-            <button onclick="gift()">禮物 🎁</button>
-        </div>
-
-        <div class="box">
-            <h2>😊 微笑次數計數</h2>
-            <p id="smileCount">已微笑：0 次</p>
-            <button onclick="addSmile()">+1 微笑</button>
-        </div>
-
-        <div class="box">
-            <h2>💌 message box</h2>
-            <textarea id="messageInput" placeholder="給湛寒留言..."></textarea>
-            <button onclick="sendMessage()">發送</button>
-            <div id="messageBox"></div>
         </div>
 
         <div class="calendar-container">
@@ -210,11 +204,9 @@
         function updateCountdown() {
             let today = new Date();
             let birthdayDate = new Date(today.getFullYear(), birthday.month, birthday.day);
-
             if (today > birthdayDate) {
                 birthdayDate.setFullYear(today.getFullYear() + 1);
             }
-
             let diff = Math.ceil((birthdayDate - today) / (1000 * 60 * 60 * 24));
             document.getElementById("countdownMessage").innerText = diff > 0 
                 ? `🎂 距離生日還有 ${diff} 天！` 
